@@ -3,360 +3,390 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>Чек-лист: где бизнес теряет время и деньги</title>
 <style>
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: Inter, Arial;
+  font-family: Inter, Arial, sans-serif;
   background: #f5f7fc;
-  margin: 0;
-  padding: 16px;
+  padding: 20px 16px 40px;
+  color: #1a1a2e;
 }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-}
+.container { max-width: 860px; margin: auto; }
 
-h1 {
-  font-size: 26px;
-}
+h1 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 6px; }
 h1 span { color: #4c6fff; }
 
-/* FORM */
+.subtitle { font-size: 14px; color: #666; margin-bottom: 20px; }
 
-.lead-form {
+/* PROGRESS */
+.progress-wrap {
   background: white;
-  padding: 24px;
-  border-radius: 20px;
-  margin-top: 20px;
-}
-
-.lead-form input {
-  width: 100%;
-  padding: 16px;
-  margin-top: 12px;
   border-radius: 16px;
-  border: 1px solid #ddd;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
-
-.lead-form button {
-  margin-top: 20px;
-  width: 100%;
-  padding: 16px;
-  background: #4c6fff;
-  color: white;
-  border: none;
-  border-radius: 16px;
+.progress-bar-bg {
+  flex: 1; height: 8px; background: #eee; border-radius: 99px; overflow: hidden;
 }
-
-.error {
-  color: red;
-  font-size: 13px;
+.progress-bar-fill {
+  height: 100%; background: #4c6fff; border-radius: 99px; width: 0%; transition: width 0.3s ease;
 }
+.progress-label { font-size: 13px; font-weight: 600; color: #4c6fff; white-space: nowrap; }
 
-/* QUIZ */
-
+/* QUIZ GRID */
 .grid {
-  display: none;
-  gap: 16px;
-  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
 }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
 
 .card {
   background: white;
   padding: 18px;
   border-radius: 16px;
+  transition: box-shadow 0.2s;
 }
+.card.answered { box-shadow: 0 0 0 2px #4c6fff33; }
+.card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.card ul { padding-left: 16px; font-size: 13px; color: #555; margin-bottom: 14px; line-height: 1.7; }
 
-.card ul {
-  padding-left: 18px;
-  font-size: 14px;
-  color: #444;
-}
-
+.btn-group { display: flex; gap: 6px; }
 .btn {
-  padding: 10px;
-  margin: 5px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
-  cursor: pointer;
+  flex: 1; padding: 10px 0; border-radius: 12px; border: 2px solid transparent;
+  cursor: pointer; font-size: 12px; font-weight: 600; text-align: center;
+  transition: border-color 0.15s, transform 0.1s;
 }
+.btn:hover { transform: scale(1.04); }
+.btn.active { border-color: #1a1a2e; }
+.btn-0 { background: #e6ecff; color: #4c6fff; }
+.btn-1 { background: #fff3c4; color: #a07800; }
+.btn-2 { background: #4c6fff; color: white; }
 
-.btn.active { border: 2px solid black; }
-
-.btn-0 { background:#e6ecff; }
-.btn-1 { background:#ffe58a; }
-.btn-2 { background:#4c6fff; color:white; }
+/* FORM */
+.lead-form {
+  display: none;
+  background: white;
+  padding: 28px 24px;
+  border-radius: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+.lead-form h2 { font-size: 20px; margin-bottom: 8px; }
+.lead-form p { font-size: 14px; color: #666; margin-bottom: 20px; }
+.lead-form input {
+  width: 100%; padding: 15px 18px; margin-bottom: 10px;
+  border-radius: 14px; border: 1.5px solid #ddd; font-size: 15px;
+  outline: none; transition: border-color 0.2s; display: block;
+}
+.lead-form input:focus { border-color: #4c6fff; }
+.lead-form .submit-btn {
+  margin-top: 6px; width: 100%; padding: 16px; background: #4c6fff;
+  color: white; border: none; border-radius: 14px; font-size: 16px;
+  font-weight: 700; cursor: pointer; transition: background 0.2s;
+}
+.lead-form .submit-btn:hover { background: #3a56e0; }
+.lead-form .submit-btn:disabled { background: #aab5e8; cursor: not-allowed; }
+.error { color: #e03a3a; font-size: 13px; margin: 4px 0 8px; min-height: 18px; }
+.privacy { font-size: 11px; color: #aaa; margin-top: 12px; }
 
 /* RESULT */
-
 .result {
-  display:none;
-  margin-top:20px;
-  background:white;
-  padding:20px;
-  border-radius:16px;
-  text-align:center;
+  display: none;
+  margin-top: 20px;
+  background: white;
+  padding: 28px 24px;
+  border-radius: 20px;
+  text-align: center;
 }
-
+.result-score { font-size: 56px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.result-label { font-size: 13px; color: #999; margin-bottom: 16px; }
+.result-headline { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+.result-text { font-size: 15px; color: #444; line-height: 1.6; margin-bottom: 24px; }
 .audit-btn {
-  margin-top: 15px;
-  padding: 14px;
-  width: 100%;
-  border-radius: 14px;
-  background:#4c6fff;
-  color:white;
-  border:none;
-  cursor:pointer;
+  display: block; width: 100%; padding: 16px; border-radius: 14px;
+  background: #4c6fff; color: white; border: none; font-size: 16px;
+  font-weight: 700; cursor: pointer; text-decoration: none; transition: background 0.2s;
 }
-
+.audit-btn:hover { background: #3a56e0; }
+.audit-note { font-size: 12px; color: #aaa; margin-top: 10px; }
+.score-ok  { color: #2da84e; }
+.score-mid { color: #e0a030; }
+.score-bad { color: #e03a3a; }
 </style>
 </head>
-
 <body>
-
 <div class="container">
 
-<h1>Чек-лист: <span>где бизнес теряет время и деньги</span></h1>
+  <div style="margin-bottom: 20px;">
+    <img src="https://raw.githubusercontent.com/AidarNasretdinov/quiz/main/5.png" alt="Логотип" style="height: 48px; width: auto;">
+  </div>
 
-<!-- FORM -->
-<div class="lead-form" id="leadForm">
-  <input id="name" placeholder="Ваше имя">
-  <input id="phone" placeholder="+7 999 123 45 67">
-  <div id="error"></div>
-  <button onclick="startQuiz()">Начать</button>
-</div>
+  <h1>Чек-лист: <span>где бизнес теряет время и деньги</span></h1>
+  <p class="subtitle">Ответьте честно — 0 если нет проблемы, 1 если бывает, 2 если постоянно</p>
 
-<!-- QUIZ -->
-<div id="quiz" class="grid"></div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">0 / 8</div>
+  </div>
 
-<!-- RESULT -->
-<div id="result" class="result">
-  <h2 id="score"></h2>
-  <div id="resultText"></div>
+  <!-- QUIZ -->
+  <div class="grid">
 
-  <button class="audit-btn" onclick="contact()">
-    Получить аудит
-  </button>
-</div>
+    <div class="card" id="card_0">
+      <h3>1. Ручные процессы</h3>
+      <ul>
+        <li>Ручные задачи каждый день</li>
+        <li>Копирование данных вручную</li>
+        <li>Excel вместо нормальных систем</li>
+        <li>Зависимость от конкретного человека</li>
+      </ul>
+      <div class="btn-group">
+        <span class="btn btn-0" onclick="set(0,0,this)">0 — нет</span>
+        <span class="btn btn-1" onclick="set(0,1,this)">1 — бывает</span>
+        <span class="btn btn-2" onclick="set(0,2,this)">2 — всегда</span>
+      </div>
+    </div>
+
+    <div class="card" id="card_1">
+      <h3>2. Потери времени</h3>
+      <ul>
+        <li>Долгая обработка заявок</li>
+        <li>Задержки между этапами</li>
+        <li>Зависшие задачи без движения</li>
+        <li>Поиск информации вручную</li>
+      </ul>
+      <div class="btn-group">
+        <span class="btn btn-0" onclick="set(1,0,this)">0 — нет</span>
+        <span class="btn btn-1" onclick="set(1,1,this)">1 — бывает</span>
+        <span class="btn btn-2" onclick="set(1,2,this)">2 — всегда</span>
+      </div>
+    </div>
+
+    <div class="card" id="card_2">
+      <h3>3. Ошибки и дубли</h3>
+      <ul>
+        <li>Ошибки при вводе данных</li>
+        <li>Дубликаты клиентов в базе</li>
+        <li>Потери клиентов из-за ошибок</li>
+        <li>Нет контроля качества</li>
+      </ul>
+      <div class="btn-group">
+        <span class="btn btn-0" onclick="set(2,0,this)">0 — нет</span>
+        <span class="btn btn-1" onclick="set(2,1,this)">1 — бывает</span>
+        <span class="btn btn-2" onclick="set(2,2,this)">2 — всегда</span>
+      </div>
+    </div>
+
+    <div class="card" id="card_3">
+      <h3>4. Коммуникации</h3>
+      <ul>
+        <li>Общение в разных каналах без связи</li>
+        <li>Нет истории переписки с клиентом</li>
+        <li>Теряются сообщения и запросы</li>
+        <li>Переспрашиваете клиентов снова</li>
+      </ul>
+      <div class="btn-group">
+        <span class="btn btn-0" onclick="set(3,0,this)">0 — нет</span>
+        <span class="btn btn-1" onclick="set(3,1,this)">1 — бывает</span>
+        <span class="btn btn-2" onclick="set(3,2,this)">2 — всегда</span>
+      </div>
+    </div>
+
+    <div class="card" id="card_4">
+      <h3>5. Продажи</h3>
+      <ul>
+        <li>Заявки теряются или забываются</li>
+        <li>Нет распределения лидов</li>
+        <li>Нет автоматических напоминаний</li>
+        <li>Нет аналитики по продажам</li>
+      </ul>
+      <div class="btn-group">
+        <span class="btn btn-0" onclick="set(4,0,this)">0 — нет</span>
+        <span class="btn btn-1" onclick="set(4,1,this)">1 — бывает</span>
+        <span class="btn btn-2" onclick="set(4,2,this)">2 — всегда</span>
+      </div>
+    </div>
+
+    <div class="card" id="card_5">
+      <h3>6. Финансы</h3>
+      <ul>
+        <li>Учёт в Excel таблицах</li>
+        <li>Нет автоматизации оплат</li>
+        <li>Ручные финансовые сводки</li>
+        <li>Нет чёткой картины по деньгам</li>
+      </ul>
+      <div class="btn-group">
+        <span class="btn btn-0" onclick="set(5,0,this)">0 — нет</span>
+        <span class="btn btn-1" onclick="set(5,1,this)">1 — бывает</span>
+        <span class="btn btn-2" onclick="set(5,2,this)">2 — всегда</span>
+      </div>
+    </div>
+
+    <div class="card" id="card_6">
+      <h3>7. Интеграции</h3>
+      <ul>
+        <li>Сервисы не связаны между собой</li>
+        <li>Ручной перенос данных между системами</li>
+        <li>Нет API-связок</li>
+        <li>Дублирование одной и той же работы</li>
+      </ul>
+      <div class="btn-group">
+        <span class="btn btn-0" onclick="set(6,0,this)">0 — нет</span>
+        <span class="btn btn-1" onclick="set(6,1,this)">1 — бывает</span>
+        <span class="btn btn-2" onclick="set(6,2,this)">2 — всегда</span>
+      </div>
+    </div>
+
+    <div class="card" id="card_7">
+      <h3>8. Масштаб</h3>
+      <ul>
+        <li>Сложно нанимать и вводить в работу</li>
+        <li>Процессы ломаются при росте</li>
+        <li>Нет регламентов и инструкций</li>
+        <li>Всё держится лично на вас</li>
+      </ul>
+      <div class="btn-group">
+        <span class="btn btn-0" onclick="set(7,0,this)">0 — нет</span>
+        <span class="btn btn-1" onclick="set(7,1,this)">1 — бывает</span>
+        <span class="btn btn-2" onclick="set(7,2,this)">2 — всегда</span>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <!-- FORM -->
+  <div class="lead-form" id="leadForm">
+    <h2>Вы ответили на все вопросы 🎯</h2>
+    <p>Оставьте контакт — я пришлю разбор вашей ситуации<br>и покажу, где именно теряются деньги</p>
+    <input id="fname" placeholder="Ваше имя" autocomplete="name">
+    <input id="fphone" placeholder="+7 999 123 45 67" type="tel" autocomplete="tel">
+    <div class="error" id="ferror"></div>
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Получить результат →</button>
+    <p class="privacy">Данные не передаются третьим лицам</p>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result" id="result">
+    <div class="result-score" id="scoreNum"></div>
+    <div class="result-label">баллов из 16</div>
+    <div class="result-headline" id="resultHeadline"></div>
+    <div class="result-text" id="resultText"></div>
+    <a class="audit-btn" href="https://t.me/aidar_nasretdinov" target="_blank">
+      Получить бесплатный аудит процессов
+    </a>
+    <p class="audit-note">Напишите мне в Telegram — разберём ваш бизнес бесплатно</p>
+  </div>
 
 </div>
 
 <script>
-
 const WEBHOOK = "https://hook.eu1.make.com/qt6ddmq795lcq2wcpvggji5740vvfcv5";
 
-let lead = {};
-let lead_id = null;
-let answers = new Array(8).fill(null);
-let resultSent = false;
-
-/* DATA */
-
-const data = [
-{
-title:"Ручные процессы",
-items:[
-"Ручные задачи каждый день",
-"Копирование данных",
-"Excel вместо систем",
-"Зависимость от человека"
-]
-},
-{
-title:"Потери времени",
-items:[
-"Долгая обработка",
-"Задержки",
-"Зависшие задачи",
-"Поиск вручную"
-]
-},
-{
-title:"Ошибки",
-items:[
-"Ошибки ввода",
-"Дубликаты",
-"Потери клиентов",
-"Нет контроля"
-]
-},
-{
-title:"Коммуникации",
-items:[
-"Разные каналы",
-"Нет истории",
-"Потери сообщений",
-"Переспрашивание"
-]
-},
-{
-title:"Продажи",
-items:[
-"Заявки теряются",
-"Нет распределения",
-"Нет напоминаний",
-"Нет аналитики"
-]
-},
-{
-title:"Финансы",
-items:[
-"Excel учёт",
-"Нет автоматизации",
-"Ручная сводка",
-"Нет картины"
-]
-},
-{
-title:"Интеграции",
-items:[
-"Сервисы не связаны",
-"Ручной перенос",
-"Нет API",
-"Дублирование"
-]
-},
-{
-title:"Масштаб",
-items:[
-"Нельзя расти",
-"Процессы ломаются",
-"Нет регламентов",
-"Зависимость"
-]
-}
+const categories = [
+  "Ручные процессы","Потери времени","Ошибки и дубли","Коммуникации",
+  "Продажи","Финансы","Интеграции","Масштаб"
 ];
 
-/* INIT */
+let answers = new Array(8).fill(null);
+let quizDone = false;
 
-const quiz = document.getElementById("quiz");
-
-data.forEach((block,i)=>{
-
-  let list = "<ul>";
-  block.items.forEach(item => list += `<li>${item}</li>`);
-  list += "</ul>";
-
-  let card = document.createElement("div");
-  card.className = "card";
-
-  card.innerHTML = `
-    <h3>${i+1}. ${block.title}</h3>
-    ${list}
-    <div>
-      <span class="btn btn-0" onclick="set(${i},0,this)">0</span>
-      <span class="btn btn-1" onclick="set(${i},1,this)">1</span>
-      <span class="btn btn-2" onclick="set(${i},2,this)">2</span>
-    </div>
-  `;
-
-  quiz.appendChild(card);
-});
-
-/* HELPERS */
-
-function generateId(){
-  return "lead_" + Date.now();
-}
-
-function send(data){
-  fetch(WEBHOOK,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify(data)
-  });
-}
-
-/* FORM */
-
-function startQuiz(){
-
-  let name = document.getElementById("name").value.trim();
-  let phone = document.getElementById("phone").value.replace(/\D/g,'');
-
-  if(name.length < 2){
-    error.innerText="Введите имя"; return;
-  }
-
-  if(phone.length < 10){
-    error.innerText="Введите номер"; return;
-  }
-
-  lead = { name, phone };
-  lead_id = generateId();
-
-  /* отправка лида сразу */
-  send({
-    type:"lead_created",
-    lead_id,
-    name,
-    phone
-  });
-
-  document.getElementById("leadForm").style.display="none";
-  document.getElementById("quiz").style.display="grid";
-}
-
-/* QUIZ */
-
-function set(i,val,el){
-
-  answers[i]=val;
-
-  el.parentNode.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
+function set(i, val, el) {
+  answers[i] = val;
+  el.parentNode.querySelectorAll(".btn").forEach(b => b.classList.remove("active"));
   el.classList.add("active");
-
-  update();
-}
-
-function update(){
-
-  if(answers.includes(null)) return;
-
-  let sum = answers.reduce((a,b)=>a+b,0);
-
-  document.getElementById("result").style.display="block";
-  document.getElementById("score").innerText="Баллы: "+sum;
-
-  let text = "";
-
-  if(sum <= 5){
-    text = "У вас всё хорошо, процессы уже настроены.";
-  }
-  else if(sum <= 12){
-    text = "Есть потери времени — можно сильно улучшить.";
-  }
-  else{
-    text = "Критическая зона — бизнес теряет деньги.";
-  }
-
-  document.getElementById("resultText").innerText = text;
-
-  /* отправка результата */
-  if(!resultSent){
-    resultSent = true;
-
-    send({
-      type:"quiz_completed",
-      lead_id,
-      name: lead.name,
-      phone: lead.phone,
-      score: sum,
-      answers: answers
-    });
+  document.getElementById("card_" + i).classList.add("answered");
+  updateProgress();
+  const done = answers.filter(a => a !== null).length;
+  if (done === 8 && !quizDone) {
+    quizDone = true;
+    setTimeout(showForm, 400);
   }
 }
 
-/* CTA */
-
-function contact(){
-  window.location.href = "https://t.me/aidar_nasretdinov";
+function updateProgress() {
+  const done = answers.filter(a => a !== null).length;
+  document.getElementById("progressFill").style.width = (done / 8 * 100) + "%";
+  document.getElementById("progressLabel").innerText = done + " / 8";
 }
 
+function showForm() {
+  const form = document.getElementById("leadForm");
+  form.style.display = "block";
+  form.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function submitForm() {
+  const name = document.getElementById("fname").value.trim();
+  const rawPhone = document.getElementById("fphone").value;
+  const phone = rawPhone.replace(/\D/g, "");
+  const errEl = document.getElementById("ferror");
+
+  if (name.length < 2) { errEl.innerText = "Введите ваше имя"; return; }
+  if (phone.length < 10) { errEl.innerText = "Введите корректный номер телефона"; return; }
+  errEl.innerText = "";
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  btn.innerText = "Отправляем...";
+
+  const sum = answers.reduce((a, b) => a + b, 0);
+
+  const payload = {
+    type: "quiz_completed",
+    lead_id: "lead_" + Date.now(),
+    name: name,
+    phone: phone,
+    score: sum,
+    score_max: 16,
+    answers: answers,
+    categories: categories.map((cat, i) => ({ category: cat, score: answers[i] }))
+  };
+
+  fetch(WEBHOOK, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .catch(() => {})
+  .finally(() => showResult(sum, name));
+}
+
+function showResult(sum, name) {
+  document.getElementById("leadForm").style.display = "none";
+
+  const scoreEl = document.getElementById("scoreNum");
+  const headEl  = document.getElementById("resultHeadline");
+  const textEl  = document.getElementById("resultText");
+
+  scoreEl.innerText = sum;
+
+  if (sum <= 5) {
+    scoreEl.className = "result-score score-ok";
+    headEl.innerText = name + ", у вас хороший фундамент";
+    textEl.innerText = "Критических проблем нет, но точки роста есть всегда. На аудите найдём, где можно ускориться и сэкономить ресурсы — даже при хороших процессах.";
+  } else if (sum <= 11) {
+    scoreEl.className = "result-score score-mid";
+    headEl.innerText = name + ", бизнес теряет время и деньги";
+    textEl.innerText = "Есть реальные потери — на ручных задачах, несвязанных сервисах или слабых продажах. Всё это решается автоматизацией. На аудите покажу конкретные точки и что можно исправить быстро.";
+  } else {
+    scoreEl.className = "result-score score-bad";
+    headEl.innerText = name + ", это критическая зона";
+    textEl.innerText = "Бизнес работает на ручном управлении и теряет значительные деньги каждый месяц. Чем дольше ждать — тем дороже обходится каждый день. Давайте разберём это на аудите.";
+  }
+
+  const res = document.getElementById("result");
+  res.style.display = "block";
+  res.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 </script>
-
 </body>
 </html>
