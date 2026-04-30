@@ -14,9 +14,11 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 900px;
   margin: auto;
 }
+
+/* HEADER */
 
 .header-top {
   display: flex;
@@ -24,15 +26,19 @@ body {
   align-items: center;
 }
 
-.logo img { height: 40px; }
+.logo img { height: 42px; }
 
 .tagline {
   font-size: 12px;
   color: #6b7280;
 }
 
+/* HERO */
+
 .hero h1 {
-  font-size: 24px;
+  font-size: 26px;
+  line-height: 1.3;
+  margin-top: 20px;
 }
 .hero span { color: #4c6fff; }
 
@@ -40,36 +46,41 @@ body {
 
 .lead-form {
   background: white;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 24px;
+  border-radius: 16px;
   margin-top: 20px;
   border: 1px solid #e5e7ef;
 }
 
+.lead-form h2 {
+  margin-bottom: 10px;
+}
+
 .lead-form input {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 8px;
+  padding: 14px;
+  margin-top: 12px;
+  border-radius: 10px;
   border: 1px solid #ddd;
   font-size: 16px;
 }
 
 .lead-form button {
-  margin-top: 15px;
+  margin-top: 18px;
   width: 100%;
-  padding: 12px;
-  background: #4c6fff;
+  padding: 14px;
+  background: linear-gradient(90deg, #4c6fff, #5a7cff);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .error {
   color: red;
   font-size: 13px;
-  margin-top: 5px;
+  margin-top: 6px;
 }
 
 /* GRID */
@@ -77,31 +88,41 @@ body {
 .grid {
   display: none;
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 16px;
   margin-top: 20px;
 }
 
 .card {
   background: white;
-  border-radius: 14px;
-  padding: 16px;
+  border-radius: 16px;
+  padding: 18px;
   border: 1px solid #e5e7ef;
+}
+
+.card h3 {
+  margin-bottom: 10px;
 }
 
 .card ul {
   padding-left: 18px;
   font-size: 14px;
+  color: #444;
 }
 
 /* BUTTONS */
 
+.options {
+  margin-top: 12px;
+}
+
 .btn {
   display: inline-block;
-  padding: 8px 12px;
-  margin-right: 6px;
+  padding: 10px 14px;
+  margin-right: 8px;
   border-radius: 20px;
   cursor: pointer;
   border: 1px solid #ddd;
+  font-weight: 500;
 }
 
 .btn.active {
@@ -117,8 +138,8 @@ body {
 .result {
   margin-top: 20px;
   background: white;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 18px;
+  border-radius: 16px;
   text-align: center;
   border: 1px solid #e5e7ef;
   opacity: 0;
@@ -128,7 +149,7 @@ body {
 .result.show { opacity: 1; }
 
 .score {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
 }
 
@@ -143,10 +164,10 @@ body {
   background: #4c6fff;
   color: white;
   border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: 12px;
   cursor: pointer;
-  margin: 5px;
+  width: 100%;
 }
 
 /* DESKTOP */
@@ -172,7 +193,10 @@ body {
 </div>
 
 <div class="hero">
-  <h1>Чек-лист: <span>где ваш бизнес теряет время и деньги</span></h1>
+  <h1>
+    Чек-лист: 
+    <span>где ваш бизнес теряет время и деньги</span>
+  </h1>
 </div>
 
 <!-- FORM -->
@@ -180,7 +204,9 @@ body {
 <div class="lead-form" id="leadForm">
   <h2>Получите диагностику бизнеса</h2>
 
+  <input type="text" id="name" placeholder="Ваше имя">
   <input type="tel" id="phone" placeholder="+7 999 123 45 67">
+
   <div class="error" id="error"></div>
 
   <button onclick="startQuiz()">Начать</button>
@@ -199,13 +225,10 @@ body {
 
   <div class="cta" id="cta">
     <button onclick="contact()">Получить аудит</button>
-    <button onclick="downloadPDF()">Скачать PDF</button>
   </div>
 </div>
 
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
 
@@ -214,8 +237,13 @@ let answers = new Array(8).fill(null);
 
 function startQuiz(){
 
-  let phone = document.getElementById("phone").value;
-  phone = phone.replace(/\D/g, ""); // только цифры
+  let name = document.getElementById("name").value.trim();
+  let phone = document.getElementById("phone").value.replace(/\D/g, "");
+
+  if(name.length < 2){
+    document.getElementById("error").innerText = "Введите имя";
+    return;
+  }
 
   if(phone.length < 10){
     document.getElementById("error").innerText = "Введите корректный номер";
@@ -224,7 +252,7 @@ function startQuiz(){
 
   document.getElementById("error").innerText = "";
 
-  leadData = { phone };
+  leadData = { name, phone };
 
   document.getElementById("leadForm").style.display = "none";
   document.getElementById("quiz").style.display = "grid";
@@ -235,11 +263,11 @@ function startQuiz(){
 const data = [
 {title:"Ручные процессы",items:["Ручные задачи","Копирование данных","Excel вместо систем","Зависимость"]},
 {title:"Потери времени",items:["Долгая обработка","Задержки","Зависшие задачи","Поиск"]},
-{title:"Ошибки",items:["Ошибки ввода","Дубликаты","Потери","Нет контроля"]},
+{title:"Ошибки",items:["Ошибки ввода","Дубликаты","Потери клиентов","Нет контроля"]},
 {title:"Коммуникации",items:["Разные каналы","Нет истории","Потери сообщений","Переспрашивание"]},
 {title:"Продажи",items:["Заявки теряются","Нет распределения","Нет напоминаний","Нет аналитики"]},
 {title:"Финансы",items:["Excel учёт","Нет автоматизации","Ручная сводка","Нет картины"]},
-{title:"Интеграции",items:["Несвязанные сервисы","Ручной перенос","Нет API","Дублирование"]},
+{title:"Интеграции",items:["Сервисы не связаны","Ручной перенос","Нет API","Дублирование"]},
 {title:"Масштаб",items:["Нельзя расти","Процессы ломаются","Нет регламентов","Зависимость"]}
 ];
 
@@ -257,7 +285,7 @@ data.forEach((block, i) => {
   card.innerHTML = `
     <h3>${i+1}. ${block.title}</h3>
     ${list}
-    <div>
+    <div class="options">
       <span class="btn btn-0" onclick="set(${i},0,this)">0</span>
       <span class="btn btn-1" onclick="set(${i},1,this)">1</span>
       <span class="btn btn-2" onclick="set(${i},2,this)">2</span>
@@ -296,18 +324,6 @@ function update(){
 
 function contact(){
   window.location.href = "https://t.me/yourusername";
-}
-
-function downloadPDF(){
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  doc.text(`Телефон: ${leadData.phone}`,10,10);
-
-  let sum = answers.reduce((a,b)=>a+b,0);
-  doc.text(`Баллы: ${sum}`,10,20);
-
-  doc.save("audit.pdf");
 }
 
 </script>
