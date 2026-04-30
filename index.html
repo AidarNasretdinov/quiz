@@ -19,10 +19,16 @@ body {
   margin: auto;
 }
 
+.hero h1 {
+  font-size: 26px;
+}
+.hero span { color: #4c6fff; }
+
 .lead-form {
   background: white;
   padding: 24px;
   border-radius: 20px;
+  margin-top: 20px;
 }
 
 .lead-form input {
@@ -43,6 +49,8 @@ body {
   border-radius: 16px;
 }
 
+.error { color:red; font-size:13px; }
+
 .grid {
   display: none;
   gap: 16px;
@@ -51,8 +59,14 @@ body {
 
 .card {
   background: white;
-  padding: 16px;
+  padding: 18px;
   border-radius: 16px;
+}
+
+.card ul {
+  padding-left: 18px;
+  font-size: 14px;
+  color: #444;
 }
 
 .btn {
@@ -85,17 +99,20 @@ body {
 
 <div class="container">
 
-<h1>Чек-лист бизнеса</h1>
+<h1>Чек-лист: <span>где бизнес теряет время и деньги</span></h1>
 
+<!-- FORM -->
 <div class="lead-form" id="leadForm">
   <input id="name" placeholder="Ваше имя">
   <input id="phone" placeholder="+7 999 123 45 67">
-  <div id="error" style="color:red"></div>
+  <div id="error"></div>
   <button onclick="startQuiz()">Начать</button>
 </div>
 
+<!-- QUIZ -->
 <div id="quiz" class="grid"></div>
 
+<!-- RESULT -->
 <div id="result" class="result">
   <h2 id="score"></h2>
 </div>
@@ -106,34 +123,127 @@ body {
 
 const WEBHOOK = "https://hook.eu1.make.com/qt6ddmq795lcq2wcpvggji5740vvfcv5";
 
-const data = [
-"Ручные процессы","Потери времени","Ошибки","Коммуникации",
-"Продажи","Финансы","Интеграции","Масштаб"
-];
-
-let answers = new Array(data.length).fill(null);
 let lead = {};
 let lead_id = null;
+let answers = new Array(8).fill(null);
 let resultSent = false;
 
-/* генерация id лида */
+/* DATA С ВОПРОСАМИ */
+
+const data = [
+{
+title:"Ручные процессы",
+items:[
+"Есть ли задачи, которые выполняются вручную каждый день?",
+"Копируются ли данные между системами?",
+"Используется ли Excel вместо CRM?",
+"Зависит ли процесс от конкретного человека?"
+]
+},
+{
+title:"Потери времени",
+items:[
+"Долго ли обрабатываются заявки?",
+"Есть ли задержки между этапами?",
+"Бывают ли зависшие задачи?",
+"Ищут ли сотрудники информацию вручную?"
+]
+},
+{
+title:"Ошибки",
+items:[
+"Часто ли возникают ошибки?",
+"Есть ли дубликаты данных?",
+"Теряются ли клиенты?",
+"Есть ли контроль качества?"
+]
+},
+{
+title:"Коммуникации",
+items:[
+"Общение в разных каналах?",
+"Нет единой истории клиента?",
+"Теряются сообщения?",
+"Нужно переспрашивать?"
+]
+},
+{
+title:"Продажи",
+items:[
+"Все заявки фиксируются?",
+"Есть распределение лидов?",
+"Есть напоминания?",
+"Анализируется ли воронка?"
+]
+},
+{
+title:"Финансы",
+items:[
+"Учёт в Excel?",
+"Есть автоматизация счетов?",
+"Данные сводятся вручную?",
+"Есть актуальная картина?"
+]
+},
+{
+title:"Интеграции",
+items:[
+"Сервисы не связаны?",
+"Нужно переносить данные вручную?",
+"Нет API?",
+"Дублируется информация?"
+]
+},
+{
+title:"Масштаб",
+items:[
+"Нельзя расти без найма?",
+"Процессы ломаются при росте?",
+"Нет регламентов?",
+"Зависимость от сотрудников?"
+]
+}
+];
+
+/* INIT */
+
+const quiz = document.getElementById("quiz");
+
+data.forEach((block,i)=>{
+
+  let list = "<ul>";
+  block.items.forEach(item => list += `<li>${item}</li>`);
+  list += "</ul>";
+
+  let card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+    <h3>${i+1}. ${block.title}</h3>
+    ${list}
+    <div>
+      <span class="btn btn-0" onclick="set(${i},0,this)">0</span>
+      <span class="btn btn-1" onclick="set(${i},1,this)">1</span>
+      <span class="btn btn-2" onclick="set(${i},2,this)">2</span>
+    </div>
+  `;
+
+  quiz.appendChild(card);
+});
+
+/* FUNCTIONS */
+
 function generateId(){
   return "lead_" + Date.now();
 }
 
-async function sendToMake(payload){
-  try{
-    await fetch(WEBHOOK,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify(payload)
-    });
-  }catch(e){
-    console.log("Ошибка webhook", e);
-  }
+function send(data){
+  fetch(WEBHOOK,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify(data)
+  });
 }
-
-/* форма */
 
 function startQuiz(){
 
@@ -151,40 +261,20 @@ function startQuiz(){
   lead = { name, phone };
   lead_id = generateId();
 
-  /* 🔥 отправка сразу */
-  sendToMake({
-    type: "lead_created",
+  /* отправка сразу */
+  send({
+    type:"lead_created",
     lead_id,
     name,
-    phone,
-    time: new Date().toISOString()
+    phone
   });
 
   document.getElementById("leadForm").style.display="none";
   document.getElementById("quiz").style.display="grid";
 }
 
-/* генерация квиза */
-
-const quiz = document.getElementById("quiz");
-
-data.forEach((t,i)=>{
-  let card=document.createElement("div");
-  card.className="card";
-
-  card.innerHTML=`
-    <h3>${t}</h3>
-    <span class="btn btn-0" onclick="set(${i},0,this)">0</span>
-    <span class="btn btn-1" onclick="set(${i},1,this)">1</span>
-    <span class="btn btn-2" onclick="set(${i},2,this)">2</span>
-  `;
-
-  quiz.appendChild(card);
-});
-
-/* ответы */
-
 function set(i,val,el){
+
   answers[i]=val;
 
   el.parentNode.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
@@ -192,8 +282,6 @@ function set(i,val,el){
 
   update();
 }
-
-/* обновление */
 
 function update(){
 
@@ -204,18 +292,16 @@ function update(){
   document.getElementById("result").style.display="block";
   document.getElementById("score").innerText="Баллы: "+sum;
 
-  /* 🔥 отправка результата */
   if(!resultSent){
     resultSent = true;
 
-    sendToMake({
-      type: "quiz_completed",
+    send({
+      type:"quiz_completed",
       lead_id,
       name: lead.name,
       phone: lead.phone,
       score: sum,
-      answers: answers,
-      time: new Date().toISOString()
+      answers: answers
     });
   }
 }
