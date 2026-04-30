@@ -51,9 +51,11 @@ h1 span { color: #4c6fff; }
   background: white;
   padding: 18px;
   border-radius: 16px;
-  transition: box-shadow 0.2s;
+  border: 2px solid transparent;
+  transition: border-color 0.25s, box-shadow 0.25s;
 }
-.card.answered { box-shadow: 0 0 0 2px #4c6fff33; }
+.card.unanswered { border-color: #f0b429; }
+.card.answered { border-color: transparent; box-shadow: 0 0 0 2px #4c6fff33; }
 .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
 .card ul { padding-left: 16px; font-size: 13px; color: #555; margin-bottom: 14px; line-height: 1.7; }
 
@@ -298,12 +300,26 @@ const categories = [
 
 let answers = new Array(8).fill(null);
 let quizDone = false;
+let quizStarted = false;
 
 function set(i, val, el) {
   answers[i] = val;
   el.parentNode.querySelectorAll(".btn").forEach(b => b.classList.remove("active"));
   el.classList.add("active");
-  document.getElementById("card_" + i).classList.add("answered");
+
+  const card = document.getElementById("card_" + i);
+  card.classList.remove("unanswered");
+  card.classList.add("answered");
+
+  if (!quizStarted) {
+    quizStarted = true;
+    for (let j = 0; j < 8; j++) {
+      if (answers[j] === null) {
+        document.getElementById("card_" + j).classList.add("unanswered");
+      }
+    }
+  }
+
   updateProgress();
   const done = answers.filter(a => a !== null).length;
   if (done === 8 && !quizDone) {
