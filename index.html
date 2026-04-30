@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Чек-лист бизнеса</title>
+
+<style>
+body {
+  font-family: Inter, Arial, sans-serif;
+  background: #f5f7fc;
+  margin: 0;
+  padding: 40px;
+  color: #1a1a1a;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* HEADER */
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  height: 50px;
+}
+
+.tagline {
+  font-size: 14px;
+  color: #6b7280;
+  text-align: right;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.hero span {
+  color: #4c6fff;
+}
+
+.hero p {
+  margin-top: 15px;
+  color: #6b7280;
+}
+
+.cube {
+  width: 180px;
+  opacity: 0.3;
+}
+
+/* LEGEND */
+
+.legend {
+  margin-top: 30px;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  border: 1px solid #e5e7ef;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.c0 { background: #e6ecff; }
+.c1 { background: #ffe58a; }
+.c2 { background: #4c6fff; color: white; }
+
+/* GRID */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid #e5e7ef;
+}
+
+.card h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.card ul {
+  padding-left: 18px;
+  color: #444;
+}
+
+.options {
+  margin-top: 15px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 14px;
+  margin-right: 8px;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.btn.active {
+  border: 2px solid #000;
+}
+
+.btn-0 { background: #e6ecff; }
+.btn-1 { background: #ffe58a; }
+.btn-2 { background: #4c6fff; color: white; }
+
+/* RESULT */
+
+.result {
+  margin-top: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #e5e7ef;
+}
+
+.score {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+
+<div class="header-top">
+  <div class="logo">
+    <img src="logo.png">
+  </div>
+
+  <div class="tagline">
+    Автоматизация<br>бизнес-процессов
+  </div>
+</div>
+
+<div class="hero">
+  <div>
+    <h1>
+      Чек-лист:<br>
+      <span>где ваш бизнес теряет<br>время и деньги</span>
+    </h1>
+
+    <p>
+      Ответьте на вопросы честно — это займет 10–15 минут,<br>
+      но поможет увидеть точки роста и потерь.
+    </p>
+  </div>
+
+  <img src="cube.png" class="cube">
+</div>
+
+<!-- LEGEND -->
+
+<div class="legend">
+  Оцените каждый пункт:
+  <span><div class="circle c0">0</div> всё ок</span>
+  <span><div class="circle c1">1</div> проблемы</span>
+  <span><div class="circle c2">2</div> критично</span>
+</div>
+
+<!-- QUIZ -->
+
+<div class="grid" id="quiz"></div>
+
+<!-- RESULT -->
+
+<div class="result">
+  <div>Сумма баллов</div>
+  <div class="score" id="score">0</div>
+  <div id="text"></div>
+</div>
+
+</div>
+
+<script>
+
+const data = [
+["Ручные процессы", [
+"Ручные задачи каждый день",
+"Копирование данных",
+"Использование Excel вместо систем",
+"Зависимость от сотрудника"
+]],
+["Потери времени", [
+"Долгая обработка заявок",
+"Задержки этапов",
+"Зависшие задачи",
+"Поиск информации вручную"
+]],
+["Ошибки", [
+"Ошибки ввода",
+"Дубликаты",
+"Потеря клиентов",
+"Нет контроля качества"
+]],
+["Коммуникации", [
+"Разные каналы",
+"Нет истории клиента",
+"Потери сообщений",
+"Переспрашивание"
+]],
+["Продажи", [
+"Заявки не фиксируются",
+"Нет распределения",
+"Нет напоминаний",
+"Нет аналитики"
+]],
+["Финансы", [
+"Excel учёт",
+"Нет авто счетов",
+"Ручные данные",
+"Нет картины"
+]],
+["Интеграции", [
+"Несвязанные сервисы",
+"Ручной перенос",
+"Нет API",
+"Дублирование"
+]],
+["Масштаб", [
+"Рост без найма невозможен",
+"Процессы ломаются",
+"Нет регламентов",
+"Зависимость от людей"
+]]
+];
+
+let answers = new Array(data.length).fill(0);
+
+const quiz = document.getElementById("quiz");
+
+data.forEach((block, i) => {
+
+  const card = document.createElement("div");
+  card.className = "card";
+
+  let list = "<ul>";
+  block[1].forEach(item => list += `<li>${item}</li>`);
+  list += "</ul>";
+
+  card.innerHTML = `
+    <h2>${i+1}. ${block[0]}</h2>
+    ${list}
+    <div class="options">
+      <span class="btn btn-0" onclick="set(${i},0,this)">0</span>
+      <span class="btn btn-1" onclick="set(${i},1,this)">1</span>
+      <span class="btn btn-2" onclick="set(${i},2,this)">2</span>
+    </div>
+  `;
+
+  quiz.appendChild(card);
+});
+
+function set(i,v,el){
+  answers[i]=v;
+  el.parentNode.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
+  el.classList.add("active");
+  update();
+}
+
+function update(){
+  let sum = answers.reduce((a,b)=>a+b,0);
+  document.getElementById("score").innerText = sum;
+
+  let text = sum<=5 ? "Система работает хорошо"
+            : sum<=15 ? "Есть потери времени"
+            : "Критическая зона";
+
+  document.getElementById("text").innerText = text;
+}
+
+</script>
+
+</body>
+</html>
