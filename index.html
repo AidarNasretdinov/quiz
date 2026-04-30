@@ -19,10 +19,12 @@ body {
   margin: auto;
 }
 
-.hero h1 {
+h1 {
   font-size: 26px;
 }
-.hero span { color: #4c6fff; }
+h1 span { color: #4c6fff; }
+
+/* FORM */
 
 .lead-form {
   background: white;
@@ -49,7 +51,12 @@ body {
   border-radius: 16px;
 }
 
-.error { color:red; font-size:13px; }
+.error {
+  color: red;
+  font-size: 13px;
+}
+
+/* QUIZ */
 
 .grid {
   display: none;
@@ -83,6 +90,8 @@ body {
 .btn-1 { background:#ffe58a; }
 .btn-2 { background:#4c6fff; color:white; }
 
+/* RESULT */
+
 .result {
   display:none;
   margin-top:20px;
@@ -90,6 +99,17 @@ body {
   padding:20px;
   border-radius:16px;
   text-align:center;
+}
+
+.audit-btn {
+  margin-top: 15px;
+  padding: 14px;
+  width: 100%;
+  border-radius: 14px;
+  background:#4c6fff;
+  color:white;
+  border:none;
+  cursor:pointer;
 }
 
 </style>
@@ -115,6 +135,11 @@ body {
 <!-- RESULT -->
 <div id="result" class="result">
   <h2 id="score"></h2>
+  <div id="resultText"></div>
+
+  <button class="audit-btn" onclick="contact()">
+    Получить аудит
+  </button>
 </div>
 
 </div>
@@ -128,79 +153,79 @@ let lead_id = null;
 let answers = new Array(8).fill(null);
 let resultSent = false;
 
-/* DATA С ВОПРОСАМИ */
+/* DATA */
 
 const data = [
 {
 title:"Ручные процессы",
 items:[
-"Есть ли задачи, которые выполняются вручную каждый день?",
-"Копируются ли данные между системами?",
-"Используется ли Excel вместо CRM?",
-"Зависит ли процесс от конкретного человека?"
+"Ручные задачи каждый день",
+"Копирование данных",
+"Excel вместо систем",
+"Зависимость от человека"
 ]
 },
 {
 title:"Потери времени",
 items:[
-"Долго ли обрабатываются заявки?",
-"Есть ли задержки между этапами?",
-"Бывают ли зависшие задачи?",
-"Ищут ли сотрудники информацию вручную?"
+"Долгая обработка",
+"Задержки",
+"Зависшие задачи",
+"Поиск вручную"
 ]
 },
 {
 title:"Ошибки",
 items:[
-"Часто ли возникают ошибки?",
-"Есть ли дубликаты данных?",
-"Теряются ли клиенты?",
-"Есть ли контроль качества?"
+"Ошибки ввода",
+"Дубликаты",
+"Потери клиентов",
+"Нет контроля"
 ]
 },
 {
 title:"Коммуникации",
 items:[
-"Общение в разных каналах?",
-"Нет единой истории клиента?",
-"Теряются сообщения?",
-"Нужно переспрашивать?"
+"Разные каналы",
+"Нет истории",
+"Потери сообщений",
+"Переспрашивание"
 ]
 },
 {
 title:"Продажи",
 items:[
-"Все заявки фиксируются?",
-"Есть распределение лидов?",
-"Есть напоминания?",
-"Анализируется ли воронка?"
+"Заявки теряются",
+"Нет распределения",
+"Нет напоминаний",
+"Нет аналитики"
 ]
 },
 {
 title:"Финансы",
 items:[
-"Учёт в Excel?",
-"Есть автоматизация счетов?",
-"Данные сводятся вручную?",
-"Есть актуальная картина?"
+"Excel учёт",
+"Нет автоматизации",
+"Ручная сводка",
+"Нет картины"
 ]
 },
 {
 title:"Интеграции",
 items:[
-"Сервисы не связаны?",
-"Нужно переносить данные вручную?",
-"Нет API?",
-"Дублируется информация?"
+"Сервисы не связаны",
+"Ручной перенос",
+"Нет API",
+"Дублирование"
 ]
 },
 {
 title:"Масштаб",
 items:[
-"Нельзя расти без найма?",
-"Процессы ломаются при росте?",
-"Нет регламентов?",
-"Зависимость от сотрудников?"
+"Нельзя расти",
+"Процессы ломаются",
+"Нет регламентов",
+"Зависимость"
 ]
 }
 ];
@@ -231,7 +256,7 @@ data.forEach((block,i)=>{
   quiz.appendChild(card);
 });
 
-/* FUNCTIONS */
+/* HELPERS */
 
 function generateId(){
   return "lead_" + Date.now();
@@ -244,6 +269,8 @@ function send(data){
     body: JSON.stringify(data)
   });
 }
+
+/* FORM */
 
 function startQuiz(){
 
@@ -261,7 +288,7 @@ function startQuiz(){
   lead = { name, phone };
   lead_id = generateId();
 
-  /* отправка сразу */
+  /* отправка лида сразу */
   send({
     type:"lead_created",
     lead_id,
@@ -272,6 +299,8 @@ function startQuiz(){
   document.getElementById("leadForm").style.display="none";
   document.getElementById("quiz").style.display="grid";
 }
+
+/* QUIZ */
 
 function set(i,val,el){
 
@@ -292,6 +321,21 @@ function update(){
   document.getElementById("result").style.display="block";
   document.getElementById("score").innerText="Баллы: "+sum;
 
+  let text = "";
+
+  if(sum <= 5){
+    text = "У вас всё хорошо, процессы уже настроены.";
+  }
+  else if(sum <= 12){
+    text = "Есть потери времени — можно сильно улучшить.";
+  }
+  else{
+    text = "Критическая зона — бизнес теряет деньги.";
+  }
+
+  document.getElementById("resultText").innerText = text;
+
+  /* отправка результата */
   if(!resultSent){
     resultSent = true;
 
@@ -304,6 +348,12 @@ function update(){
       answers: answers
     });
   }
+}
+
+/* CTA */
+
+function contact(){
+  window.location.href = "https://t.me/aidar_nasretdinov";
 }
 
 </script>
