@@ -268,7 +268,7 @@ h1 span { color: #4c6fff; }
     <h2>Вы ответили на все вопросы 🎯</h2>
     <p>Оставьте контакт — я пришлю разбор вашей ситуации<br>и покажу, где именно теряются деньги</p>
     <input id="fname" placeholder="Ваше имя" autocomplete="name">
-    <input id="fphone" placeholder="+7 999 123 45 67" type="tel" autocomplete="tel">
+    <input id="fphone" placeholder="+420 123 456 789" type="tel" autocomplete="tel">
     <div class="error" id="ferror"></div>
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">Получить результат →</button>
     <p class="privacy">Данные не передаются третьим лицам</p>
@@ -356,7 +356,16 @@ function submitForm() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   })
-  .catch(() => {})
+  .then(res => {
+    if (!res.ok) {
+      console.error("Webhook error:", res.status, res.statusText);
+    } else {
+      console.log("Webhook OK:", res.status);
+    }
+  })
+  .catch(err => {
+    console.error("Webhook fetch failed:", err);
+  })
   .finally(() => showResult(sum, name));
 }
 
