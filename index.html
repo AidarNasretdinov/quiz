@@ -3,166 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Чек-лист бизнеса</title>
 
 <style>
 
 body {
-  font-family: Inter, Arial, sans-serif;
-  background: #f5f7fc;
-  margin: 0;
-  padding: 16px;
-}
-
-.container {
-  max-width: 1000px;
-  margin: auto;
-}
-
-/* HEADER */
-
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo img { height: 40px; }
-
-.tagline {
-  font-size: 12px;
-  color: #6b7280;
-}
-
-/* HERO */
-
-.hero h1 {
-  font-size: 24px;
-}
-
-.hero span { color: #4c6fff; }
-
-/* FORM */
-
-.lead-form {
-  background: white;
+  font-family: Inter, Arial;
+  background: #f3f4f8;
   padding: 20px;
-  border-radius: 12px;
-  margin-top: 20px;
-  border: 1px solid #e5e7ef;
 }
-
-.lead-form input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
-
-.lead-form button {
-  margin-top: 15px;
-  width: 100%;
-  padding: 12px;
-  background: #4c6fff;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-/* GRID */
 
 .grid {
-  display: none;
+  display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
-  margin-top: 20px;
+  gap: 16px;
 }
 
 .card {
-  background: white;
-  border-radius: 14px;
+  background: #f1f2f6;
   padding: 16px;
-  border: 1px solid #e5e7ef;
-  transition: 0.25s;
+  border-radius: 16px;
 }
 
-.card:hover {
-  transform: translateY(-3px);
+.card h3 {
+  margin-bottom: 10px;
 }
 
-/* BUTTONS */
+.card ul {
+  padding-left: 18px;
+  font-size: 14px;
+}
 
 .btn {
   display: inline-block;
-  padding: 8px 12px;
-  margin-right: 6px;
-  border-radius: 20px;
+  margin: 5px;
+  padding: 10px 14px;
+  border-radius: 50%;
   cursor: pointer;
-  border: 1px solid #ddd;
-  transition: 0.2s;
 }
 
-.btn:hover { transform: scale(1.05); }
-
-.btn.active {
-  border: 2px solid #000;
-  transform: scale(1.1);
-}
-
-.btn-0 { background: #e6ecff; }
+.btn-0 { background: #d9dde8; }
 .btn-1 { background: #ffe58a; }
 .btn-2 { background: #4c6fff; color: white; }
 
-/* RESULT */
-
-.result {
-  margin-top: 20px;
-  background: white;
-  padding: 16px;
-  border-radius: 12px;
-  text-align: center;
-  border: 1px solid #e5e7ef;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: 0.4s;
-}
-
-.result.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.score {
-  font-size: 28px;
-  font-weight: bold;
-}
-
-/* CTA */
-
-.cta {
-  margin-top: 15px;
-  display: none;
-}
-
-.cta button {
-  background: #4c6fff;
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 5px;
-}
-
-/* DESKTOP */
-
-@media(min-width: 768px){
-  body { padding: 40px; }
-  .grid { grid-template-columns: 1fr 1fr; }
-  .hero h1 { font-size: 40px; }
-  .logo img { height: 50px; }
+.btn.active {
+  transform: scale(1.2);
 }
 
 </style>
@@ -170,156 +54,111 @@ body {
 
 <body>
 
-<div class="container">
-
-<div class="header-top">
-  <div class="logo">
-    <img src="5.png">
-  </div>
-  <div class="tagline">Автоматизация бизнес-процессов</div>
-</div>
-
-<div class="hero">
-  <h1>Чек-лист: <span>где ваш бизнес теряет время</span></h1>
-</div>
-
-<!-- FORM -->
-
-<div class="lead-form" id="leadForm">
-  <h2>Получите диагностику бизнеса</h2>
-  <p>Оставьте контакт — получите разбор после прохождения</p>
-
-  <input type="text" id="name" placeholder="Ваше имя">
-  <input type="text" id="contact" placeholder="Telegram / Email / Телефон">
-
-  <button onclick="startQuiz()">Начать</button>
-</div>
-
-<!-- QUIZ -->
+<h2>Чек-лист: где ваш бизнес теряет время</h2>
 
 <div class="grid" id="quiz"></div>
 
-<!-- RESULT -->
-
-<div class="result" id="result">
-  <div>Сумма баллов</div>
-  <div class="score" id="score">0</div>
-  <div id="text"></div>
-
-  <div class="cta" id="cta">
-    <button onclick="contact()">Получить аудит</button>
-    <button onclick="downloadPDF()">Скачать PDF</button>
-  </div>
-</div>
-
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
 
-let leadData = {};
-
-function startQuiz(){
-
-  const name = document.getElementById("name").value;
-  const contact = document.getElementById("contact").value;
-
-  if(!name || !contact){
-    alert("Заполните все поля");
-    return;
-  }
-
-  leadData = { name, contact };
-
-  document.getElementById("leadForm").style.display = "none";
-  document.getElementById("quiz").style.display = "grid";
-}
-
 const data = [
-"Ручные процессы","Потери времени","Ошибки","Коммуникации",
-"Продажи","Финансы","Интеграции","Масштаб"
+{
+title:"Ручные процессы",
+items:[
+"Ручные задачи каждый день",
+"Копирование данных",
+"Excel вместо систем",
+"Зависимость от человека"
+]
+},
+{
+title:"Потери времени",
+items:[
+"Долгая обработка",
+"Задержки этапов",
+"Зависшие задачи",
+"Поиск вручную"
+]
+},
+{
+title:"Ошибки",
+items:[
+"Ошибки ввода",
+"Дубликаты",
+"Потеря клиентов",
+"Нет контроля"
+]
+},
+{
+title:"Коммуникации",
+items:[
+"Разные каналы",
+"Нет истории клиента",
+"Потери сообщений",
+"Переспрашивание"
+]
+},
+{
+title:"Продажи",
+items:[
+"Заявки не фиксируются",
+"Нет распределения",
+"Нет напоминаний",
+"Нет аналитики"
+]
+},
+{
+title:"Финансы",
+items:[
+"Excel учёт",
+"Нет авто счетов",
+"Ручные данные",
+"Нет картины"
+]
+},
+{
+title:"Интеграции",
+items:[
+"Несвязанные сервисы",
+"Ручной перенос",
+"Нет API",
+"Дублирование"
+]
+},
+{
+title:"Масштаб",
+items:[
+"Нельзя расти без найма",
+"Процессы ломаются",
+"Нет регламентов",
+"Зависимость от людей"
+]
+}
 ];
-
-let answers = new Array(data.length).fill(null);
 
 const quiz = document.getElementById("quiz");
 
-data.forEach((title, i) => {
+data.forEach((block,i)=>{
+
+  let list = "<ul>";
+  block.items.forEach(q=> list += `<li>${q}</li>`);
+  list += "</ul>";
+
   const card = document.createElement("div");
   card.className = "card";
 
   card.innerHTML = `
-    <h3>${i+1}. ${title}</h3>
+    <h3>${i+1}. ${block.title}</h3>
+    ${list}
     <div>
-      <span class="btn btn-0" onclick="set(${i},0,this)">0</span>
-      <span class="btn btn-1" onclick="set(${i},1,this)">1</span>
-      <span class="btn btn-2" onclick="set(${i},2,this)">2</span>
+      <span class="btn btn-0">0</span>
+      <span class="btn btn-1">1</span>
+      <span class="btn btn-2">2</span>
     </div>
   `;
 
   quiz.appendChild(card);
+
 });
-
-function set(i,v,el){
-  answers[i]=v;
-  el.parentNode.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
-  el.classList.add("active");
-  update();
-}
-
-function update(){
-
-  if(answers.includes(null)) return;
-
-  let sum = answers.reduce((a,b)=>a+b,0);
-
-  document.getElementById("score").innerText = sum;
-
-  let text = sum<=5 ? "Система работает хорошо"
-            : sum<=15 ? "Есть потери времени"
-            : "Критическая зона — бизнес теряет деньги";
-
-  document.getElementById("text").innerText = text;
-
-  document.getElementById("result").classList.add("show");
-  document.getElementById("cta").style.display = "block";
-}
-
-function contact(){
-  window.location.href = "https://t.me/yourusername";
-}
-
-function downloadPDF(){
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  let y = 10;
-
-  doc.setFontSize(14);
-  doc.text("Отчёт по чек-листу", 10, y);
-
-  y += 10;
-
-  doc.text(`Имя: ${leadData.name}`, 10, y);
-  y += 8;
-  doc.text(`Контакт: ${leadData.contact}`, 10, y);
-  y += 10;
-
-  answers.forEach((val, i) => {
-    doc.text(`${i+1}. ${data[i]} — ${val}`, 10, y);
-    y += 8;
-  });
-
-  y += 10;
-
-  let sum = answers.reduce((a,b)=>a+b,0);
-
-  doc.text(`Сумма баллов: ${sum}`, 10, y);
-
-  doc.save("audit.pdf");
-}
 
 </script>
 
