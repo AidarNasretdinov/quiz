@@ -131,7 +131,7 @@ h1 span { color: #4c6fff; }
   </div>
 
   <h1>Чек-лист: <span>где бизнес теряет время и деньги</span></h1>
-  <p class="subtitle">Ответьте честно — 0 если нет проблемы, 1 если бывает, 2 если постоянно</p>
+  <p class="subtitle">Ответьте честно — нет / иногда / это мы</p>
 
   <div class="progress-wrap">
     <div class="progress-bar-bg">
@@ -152,29 +152,14 @@ h1 span { color: #4c6fff; }
         <li>Процессы держатся в головах, а не в системах</li>
       </ul>
       <div class="btn-group">
-        <span class="btn btn-0" onclick="set(0,0,this)">0 — нет</span>
-        <span class="btn btn-1" onclick="set(0,1,this)">1 — иногда</span>
-        <span class="btn btn-2" onclick="set(0,2,this)">2 — это мы</span>
+        <button class="btn btn-0" onclick="set(0,0,this)">0 — нет</span>
+        <button class="btn btn-1" onclick="set(0,1,this)">1 — иногда</span>
+        <button class="btn btn-2" onclick="set(0,2,this)">2 — это мы</span>
       </div>
     </div>
 
     <div class="card" id="card_1">
-      <h3>2. Скорость реакции</h3>
-      <ul>
-        <li>От заявки до первого контакта — больше часа</li>
-        <li>Клиент уже купил у другого, пока мы думали</li>
-        <li>Конкурент успевает раньше нас</li>
-        <li>Не знаем, как быстро реагируем на самом деле</li>
-      </ul>
-      <div class="btn-group">
-        <span class="btn btn-0" onclick="set(1,0,this)">0 — нет</span>
-        <span class="btn btn-1" onclick="set(1,1,this)">1 — иногда</span>
-        <span class="btn btn-2" onclick="set(1,2,this)">2 — это мы</span>
-      </div>
-    </div>
-
-    <div class="card" id="card_2">
-      <h3>3. Потеря клиентов</h3>
+      <h3>2. Потеря клиентов</h3>
       <ul>
         <li>За последние 3 месяца клиент ушёл из-за нашей ошибки или забывчивости</li>
         <li>Забывали перезвонить или написать в нужный момент</li>
@@ -182,9 +167,24 @@ h1 span { color: #4c6fff; }
         <li>Возможно, клиенты уходили — мы просто не знаем</li>
       </ul>
       <div class="btn-group">
-        <span class="btn btn-0" onclick="set(2,0,this)">0 — нет</span>
-        <span class="btn btn-1" onclick="set(2,1,this)">1 — иногда</span>
-        <span class="btn btn-2" onclick="set(2,2,this)">2 — это мы</span>
+        <button class="btn btn-0" onclick="set(1,0,this)">0 — нет</button>
+        <button class="btn btn-1" onclick="set(1,1,this)">1 — иногда</button>
+        <button class="btn btn-2" onclick="set(1,2,this)">2 — это мы</button>
+      </div>
+    </div>
+
+    <div class="card" id="card_2">
+      <h3>3. Скорость реакции</h3>
+      <ul>
+        <li>От заявки до первого контакта — больше часа</li>
+        <li>Клиент уже купил у другого, пока мы думали</li>
+        <li>Первый кто ответил — тот и получил клиента, не мы</li>
+        <li>Не знаем, как быстро реагируем на самом деле</li>
+      </ul>
+      <div class="btn-group">
+        <button class="btn btn-0" onclick="set(2,0,this)">0 — нет</button>
+        <button class="btn btn-1" onclick="set(2,1,this)">1 — иногда</button>
+        <button class="btn btn-2" onclick="set(2,2,this)">2 — это мы</button>
       </div>
     </div>
 
@@ -197,9 +197,9 @@ h1 span { color: #4c6fff; }
         <li>Сообщения теряются между Telegram, почтой и WhatsApp</li>
       </ul>
       <div class="btn-group">
-        <span class="btn btn-0" onclick="set(3,0,this)">0 — нет</span>
-        <span class="btn btn-1" onclick="set(3,1,this)">1 — иногда</span>
-        <span class="btn btn-2" onclick="set(3,2,this)">2 — это мы</span>
+        <button class="btn btn-0" onclick="set(3,0,this)">0 — нет</span>
+        <button class="btn btn-1" onclick="set(3,1,this)">1 — иногда</span>
+        <button class="btn btn-2" onclick="set(3,2,this)">2 — это мы</span>
       </div>
     </div>
 
@@ -212,9 +212,9 @@ h1 span { color: #4c6fff; }
         <li>Не знаем, откуда приходят самые прибыльные клиенты</li>
       </ul>
       <div class="btn-group">
-        <span class="btn btn-0" onclick="set(4,0,this)">0 — нет</span>
-        <span class="btn btn-1" onclick="set(4,1,this)">1 — иногда</span>
-        <span class="btn btn-2" onclick="set(4,2,this)">2 — это мы</span>
+        <button class="btn btn-0" onclick="set(4,0,this)">0 — нет</span>
+        <button class="btn btn-1" onclick="set(4,1,this)">1 — иногда</span>
+        <button class="btn btn-2" onclick="set(4,2,this)">2 — это мы</span>
       </div>
     </div>
 
@@ -227,24 +227,24 @@ h1 span { color: #4c6fff; }
         <li>Непонятно, какой продукт или клиент реально самый прибыльный</li>
       </ul>
       <div class="btn-group">
-        <span class="btn btn-0" onclick="set(5,0,this)">0 — нет</span>
-        <span class="btn btn-1" onclick="set(5,1,this)">1 — иногда</span>
-        <span class="btn btn-2" onclick="set(5,2,this)">2 — это мы</span>
+        <button class="btn btn-0" onclick="set(5,0,this)">0 — нет</span>
+        <button class="btn btn-1" onclick="set(5,1,this)">1 — иногда</span>
+        <button class="btn btn-2" onclick="set(5,2,this)">2 — это мы</span>
       </div>
     </div>
 
     <div class="card" id="card_6">
-      <h3>7. Двойная работа</h3>
+      <h3>7. Деньги на ручной труд</h3>
       <ul>
-        <li>Сотрудники вручную переносят данные из одного места в другое</li>
-        <li>Одна и та же информация вбивается в несколько систем</li>
-        <li>Ошибка при переносе — и клиент получает неверные данные</li>
-        <li>На перенос данных уходит больше часа в день</li>
+        <li>Платите зарплату за задачи, которые можно автоматизировать</li>
+        <li>Никто не считал, сколько рабочих часов в месяц уходит на рутину</li>
+        <li>Нанимаете новых людей, хотя проблема в процессах — не в людях</li>
+        <li>Расходы на команду растут, а производительность — нет</li>
       </ul>
       <div class="btn-group">
-        <span class="btn btn-0" onclick="set(6,0,this)">0 — нет</span>
-        <span class="btn btn-1" onclick="set(6,1,this)">1 — иногда</span>
-        <span class="btn btn-2" onclick="set(6,2,this)">2 — это мы</span>
+        <button class="btn btn-0" onclick="set(6,0,this)">0 — нет</button>
+        <button class="btn btn-1" onclick="set(6,1,this)">1 — иногда</button>
+        <button class="btn btn-2" onclick="set(6,2,this)">2 — это мы</button>
       </div>
     </div>
 
@@ -257,9 +257,9 @@ h1 span { color: #4c6fff; }
         <li>Рост завязан лично на вас — и вы не успеваете</li>
       </ul>
       <div class="btn-group">
-        <span class="btn btn-0" onclick="set(7,0,this)">0 — нет</span>
-        <span class="btn btn-1" onclick="set(7,1,this)">1 — иногда</span>
-        <span class="btn btn-2" onclick="set(7,2,this)">2 — это мы</span>
+        <button class="btn btn-0" onclick="set(7,0,this)">0 — нет</span>
+        <button class="btn btn-1" onclick="set(7,1,this)">1 — иногда</span>
+        <button class="btn btn-2" onclick="set(7,2,this)">2 — это мы</span>
       </div>
     </div>
 
@@ -269,8 +269,8 @@ h1 span { color: #4c6fff; }
   <div class="lead-form" id="leadForm">
     <h2>Вы ответили на все вопросы 🎯</h2>
     <p>Оставьте контакт — я пришлю разбор вашей ситуации<br>и покажу, где именно теряются деньги</p>
-    <input id="fname" placeholder="Ваше имя" autocomplete="name">
-    <input id="fphone" placeholder="+420 123 456 789" type="tel" autocomplete="tel">
+    <input id="fname" placeholder="Ваше имя" autocomplete="name" required minlength="2">
+    <input id="fphone" placeholder="+420 123 456 789" type="tel" autocomplete="tel" required>
     <div class="error" id="ferror"></div>
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">Получить результат →</button>
     <p class="privacy">Данные не передаются третьим лицам</p>
@@ -282,7 +282,7 @@ h1 span { color: #4c6fff; }
     <div class="result-label">баллов из 16</div>
     <div class="result-headline" id="resultHeadline"></div>
     <div class="result-text" id="resultText"></div>
-    <a class="audit-btn" href="https://t.me/aidar_nasretdinov" target="_blank">
+    <a class="audit-btn" href="https://t.me/aidar_nasretdinov" target="_blank" rel="noopener noreferrer">
       Получить бесплатный аудит процессов
     </a>
     <p class="audit-note">Напишите мне в Telegram — разберём ваш бизнес бесплатно</p>
@@ -294,13 +294,14 @@ h1 span { color: #4c6fff; }
 const WEBHOOK = "https://hook.eu1.make.com/qt6ddmq795lcq2wcpvggji5740vvfcv5";
 
 const categories = [
-  "Зависимость от людей","Скорость реакции","Потеря клиентов","Хаос в общении",
-  "Деньги в трубе","Финансовая слепота","Двойная работа","Потолок роста"
+  "Зависимость от людей","Потеря клиентов","Скорость реакции","Хаос в общении",
+  "Деньги в трубе","Финансовая слепота","Деньги на ручной труд","Потолок роста"
 ];
 
 let answers = new Array(8).fill(null);
 let quizDone = false;
 let quizStarted = false;
+let formSubmitted = false;
 
 function set(i, val, el) {
   answers[i] = val;
@@ -341,6 +342,7 @@ function showForm() {
 }
 
 function submitForm() {
+  if (formSubmitted) return;
   const name = document.getElementById("fname").value.trim();
   const rawPhone = document.getElementById("fphone").value;
   const phone = rawPhone.replace(/\D/g, "");
@@ -350,6 +352,7 @@ function submitForm() {
   if (phone.length < 10) { errEl.innerText = "Введите корректный номер телефона"; return; }
   errEl.innerText = "";
 
+  formSubmitted = true;
   const btn = document.getElementById("submitBtn");
   btn.disabled = true;
   btn.innerText = "Отправляем...";
