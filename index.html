@@ -149,6 +149,8 @@ h1 span { color: #4c6fff; }
   cursor: pointer;
 }
 .lead-form select:focus { border-color: #4c6fff; }
+.lead-form select.error-field { border-color: #e03a3a; }
+.lead-form input.error-field { border-color: #e03a3a; }
 .lead-form select option[value=""] { color: #999; }
 
 /* TOP PAINS BLOCK */
@@ -432,6 +434,7 @@ const translations = {
       phonePlaceholder: "+420 123 456 789",
       nameError: "Zadejte své jméno",
       phoneError: "Zadejte správné telefonní číslo",
+      industryError: "Vyberte prosím oblast podnikání",
       submitBtn: "Získat výsledek →",
       submitting: "Odesíláme...",
       privacy: "Data nejsou sdílena s třetími stranami"
@@ -531,6 +534,7 @@ const translations = {
       phonePlaceholder: "+420 123 456 789",
       nameError: "Please enter your name",
       phoneError: "Please enter a valid phone number",
+      industryError: "Please select your industry",
       submitBtn: "Get result →",
       submitting: "Sending...",
       privacy: "Data is not shared with third parties"
@@ -630,6 +634,7 @@ const translations = {
       phonePlaceholder: "+420 123 456 789",
       nameError: "Введите ваше имя",
       phoneError: "Введите корректный номер телефона",
+      industryError: "Пожалуйста, выберите сферу бизнеса",
       submitBtn: "Получить результат →",
       submitting: "Отправляем...",
       privacy: "Данные не передаются третьим лицам"
@@ -767,8 +772,12 @@ function submitForm() {
   const industry = document.getElementById("findustry").value || "not_specified";
   const errEl = document.getElementById("ferror");
 
-  if (name.length < 2) { errEl.innerText = t.form.nameError; return; }
-  if (phone.length < 9) { errEl.innerText = t.form.phoneError; return; }
+  // Clear previous error highlights
+  ['fname','fphone','findustry'].forEach(id => document.getElementById(id).classList.remove('error-field'));
+
+  if (name.length < 2) { errEl.innerText = t.form.nameError; document.getElementById('fname').classList.add('error-field'); return; }
+  if (phone.length < 9) { errEl.innerText = t.form.phoneError; document.getElementById('fphone').classList.add('error-field'); return; }
+  if (!industry) { errEl.innerText = t.form.industryError; document.getElementById('findustry').classList.add('error-field'); return; }
   errEl.innerText = "";
 
   formSubmitted = true;
