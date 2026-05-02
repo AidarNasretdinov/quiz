@@ -121,6 +121,52 @@ h1 span { color: #4c6fff; }
 .score-ok  { color: #2da84e; }
 .score-mid { color: #e0a030; }
 .score-bad { color: #e03a3a; }
+
+/* INDUSTRY SELECT */
+.lead-form select {
+  width: 100%; padding: 15px 18px; margin-bottom: 10px;
+  border-radius: 14px; border: 1.5px solid #ddd; font-size: 15px;
+  outline: none; transition: border-color 0.2s; display: block;
+  background: white; color: #1a1a2e; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 16px center;
+  cursor: pointer;
+}
+.lead-form select:focus { border-color: #4c6fff; }
+.lead-form select option[value=""] { color: #999; }
+
+/* TOP PAINS BLOCK */
+.top-pains {
+  background: #f5f7ff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+.top-pains-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4c6fff;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.top-pains-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 8px; font-size: 14px; color: #333; line-height: 1.5;
+}
+.top-pains-item:last-child { margin-bottom: 0; }
+.pain-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #4c6fff;
+  flex-shrink: 0; margin-top: 5px;
+}
+.pain-dot.red { background: #e03a3a; }
+
+/* TIMING NOTE */
+.timing-note {
+  font-size: 13px; color: #2da84e; font-weight: 600;
+  margin-top: 10px; margin-bottom: 0;
+}
 </style>
 </head>
 <body>
@@ -271,21 +317,31 @@ h1 span { color: #4c6fff; }
     <p id="formSub">Оставьте контакт — я пришлю разбор вашей ситуации и покажу, где именно теряются деньги</p>
     <input id="fname" placeholder="Ваше имя" autocomplete="name" required minlength="2">
     <input id="fphone" placeholder="+420 123 456 789" type="tel" autocomplete="tel" required>
+    <select id="findustry">
+      <option value="" disabled selected id="industryPlaceholder">Сфера бизнеса</option>
+      <option value="horeca">🍽️ HoReCa (кафе, ресторан, отель)</option>
+      <option value="construction">🏗️ Строительство / Недвижимость</option>
+      <option value="retail">🛒 Ритейл / E-commerce</option>
+      <option value="services">💼 Услуги / Консалтинг</option>
+      <option value="hr">👔 HR / Рекрутинг</option>
+      <option value="other">📦 Другое</option>
+    </select>
     <div class="error" id="ferror"></div>
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">Получить результат →</button>
     <p class="privacy">Данные не передаются третьим лицам</p>
   </div>
 
-  <!-- RESULT -->
   <div class="result" id="result">
     <div class="result-score" id="scoreNum"></div>
     <div class="result-label" id="resultLabel">баллов из 16</div>
     <div class="result-headline" id="resultHeadline"></div>
     <div class="result-text" id="resultText"></div>
-    <a class="audit-btn" href="https://t.me/aidar_nasretdinov" target="_blank" rel="noopener noreferrer">
+    <div class="top-pains" id="topPains"></div>
+    <a class="audit-btn" href="https://t.me/aidar_nasretdinov" target="_blank" rel="noopener noreferrer" id="auditBtnEl">
       Получить бесплатный аудит процессов
     </a>
-    <p class="audit-note">Напишите мне в Telegram — разберём ваш бизнес бесплатно</p>
+    <p class="audit-note" id="auditNoteEl">Напишите мне в Telegram — разберём ваш бизнес бесплатно</p>
+    <p class="timing-note" id="timingNote">⏱ Обычно связываюсь в течение 2–3 часов в рабочее время</p>
   </div>
 
 </div>
@@ -363,12 +419,24 @@ const translations = {
     },
     result: {
       label: "bodů z 16",
-      low:  { head: ", máte dobrý základ", text: "Kritické problémy nejsou, ale možnosti růstu jsou vždy. Na auditu najdeme, kde lze zrychlit a ušetřit zdroje — i při dobrých procesech." },
-      mid:  { head: ", firma ztrácí čas a peníze", text: "Jsou skutečné ztráty — na ručních úkolech, nepropojených službách nebo slabém prodeji. To vše řeší automatizace. Na auditu ukážu konkrétní body a co lze rychle opravit." },
-      high: { head: ", to je kritická zóna", text: "Firma funguje na ručním řízení a každý měsíc ztrácí značné peníze. Čím déle čekáte — tím dražší každý den. Pojďme to rozebrat na auditu." }
+      low:  { head: ", máte dobrý základ", text: "Kritické problémy nejsou — to je vzácné. Ale možnosti růstu jsou vždy. Na auditu najdeme, kde lze zrychlit a ušetřit zdroje bez náboru nových lidí." },
+      mid:  { head: ", firma ztrácí peníze právě teď", text: "Nejde o abstrakci — každý den s takovými procesy stojí reálné peníze. Tady jsou vaše hlavní ztráty:" },
+      high: { head: ", to je kritická zóna", text: "Firma funguje na ručním řízení a každý měsíc ztrácí značné peníze. Čím déle čekáte — tím dražší každý den. Tady to bolí nejvíc:" }
     },
     auditBtn: "Získat audit zdarma",
-    auditNote: "Napište mi na Telegram — rozebereme vaše podnikání zdarma"
+    auditNote: "Napište mi na Telegram — rozebereme vaše podnikání zdarma",
+    timingNote: "⏱ Obvykle se ozvu do 2–3 hodin v pracovní době",
+    topPainsTitle: "Vaše hlavní oblasti ztrát:",
+    painLabels: [
+      "Procesy závisí na lidech — jedna nemoc vytváří chaos",
+      "Klienti odcházejí kvůli chybám a zapomnětlivosti",
+      "Pomalá reakce — ztrácíte poptávky ve prospěch konkurence",
+      "Chaos v komunikaci — historie s klienty se ztrácí",
+      "Poptávky bez odpovědi — peníze doslova v trubce",
+      "Žádný finanční přehled v reálném čase",
+      "Platíte mzdy za to, co lze automatizovat",
+      "Růst závisí osobně na vás — škálování není možné"
+    ]
   },
 
   en: {
@@ -439,12 +507,24 @@ const translations = {
     },
     result: {
       label: "points out of 16",
-      low:  { head: ", you have a good foundation", text: "No critical issues, but there are always growth opportunities. In the audit we'll find where you can speed up and save resources." },
-      mid:  { head: ", your business is losing time and money", text: "There are real losses — on manual tasks, disconnected services or weak sales. Automation solves all of this. In the audit I'll show specific points and what can be fixed quickly." },
-      high: { head: ", this is a critical zone", text: "The business runs on manual management and loses significant money every month. The longer you wait — the more expensive each day becomes. Let's analyze this in the audit." }
+      low:  { head: ", you have a good foundation", text: "No critical issues — that's rare. But there are always growth opportunities. In the audit we'll find where you can speed up and save resources without hiring more people." },
+      mid:  { head: ", your business is losing money right now", text: "This isn't abstract — every day with these processes costs real money. Here are your main loss points:" },
+      high: { head: ", this is a critical zone", text: "The business runs on manual management and loses significant money every month. The longer you wait — the more expensive each day becomes. Here's where it hurts most:" }
     },
-    auditBtn: "Get a free audit",
-    auditNote: "Message me on Telegram — we'll analyze your business for free"
+    auditBtn: "Get a free process audit",
+    auditNote: "Message me on Telegram — we'll analyze your business for free",
+    timingNote: "⏱ I usually respond within 2–3 hours during business hours",
+    topPainsTitle: "Your main loss areas:",
+    painLabels: [
+      "Processes depend on people — one sick day creates chaos",
+      "Clients leave due to mistakes and forgetfulness",
+      "Slow response — you're losing leads to competitors",
+      "Communication chaos — client history gets lost",
+      "Unanswered inquiries — money literally down the drain",
+      "No real-time financial picture",
+      "You pay salaries for tasks that can be automated",
+      "Growth depends personally on you — scaling is impossible"
+    ]
   },
 
   ru: {
@@ -515,12 +595,24 @@ const translations = {
     },
     result: {
       label: "баллов из 16",
-      low:  { head: ", у вас хороший фундамент", text: "Критических проблем нет, но точки роста есть всегда. На аудите найдём, где можно ускориться и сэкономить ресурсы — даже при хороших процессах." },
-      mid:  { head: ", бизнес теряет время и деньги", text: "Есть реальные потери — на ручных задачах, несвязанных сервисах или слабых продажах. Всё это решается автоматизацией. На аудите покажу конкретные точки и что можно исправить быстро." },
-      high: { head: ", это критическая зона", text: "Бизнес работает на ручном управлении и теряет значительные деньги каждый месяц. Чем дольше ждать — тем дороже обходится каждый день. Давайте разберём это на аудите." }
+      low:  { head: ", у вас хороший фундамент", text: "Критических проблем нет — это редкость. Но точки роста есть всегда. На аудите найдём, где можно ускориться и сэкономить ресурсы без найма новых людей." },
+      mid:  { head: ", бизнес теряет деньги прямо сейчас", text: "Это не абстрактно — каждый день с такими процессами стоит реальных денег. Вот ваши главные потери:" },
+      high: { head: ", это критическая зона", text: "Бизнес работает на ручном управлении и теряет значительные деньги каждый месяц. Чем дольше ждать — тем дороже обходится каждый день. Вот где больнее всего:" }
     },
     auditBtn: "Получить бесплатный аудит процессов",
-    auditNote: "Напишите мне в Telegram — разберём ваш бизнес бесплатно"
+    auditNote: "Напишите мне в Telegram — разберём ваш бизнес бесплатно",
+    timingNote: "⏱ Обычно связываюсь в течение 2–3 часов в рабочее время",
+    topPainsTitle: "Ваши главные точки потерь:",
+    painLabels: [
+      "Процессы зависят от людей — один больничный создаёт хаос",
+      "Клиенты уходят из-за ошибок и забывчивости",
+      "Медленная реакция — теряете заявки в пользу конкурентов",
+      "Хаос в коммуникациях — история с клиентами теряется",
+      "Заявки без ответа — деньги буквально в трубе",
+      "Нет финансовой картины в реальном времени",
+      "Платите зарплату за то, что можно автоматизировать",
+      "Рост завязан лично на вас — масштаб невозможен"
+    ]
   }
 };
 
@@ -541,14 +633,22 @@ function applyTranslations() {
   document.querySelector('h1').innerHTML = t.title + ' <span>' + t.titleSpan + '</span>';
   document.querySelector('.subtitle').textContent = t.subtitle;
   document.getElementById('resultLabel').textContent = t.result.label;
-  document.querySelector('.audit-btn').textContent = t.auditBtn;
-  document.querySelector('.audit-note').textContent = t.auditNote;
+  document.getElementById('auditBtnEl').textContent = t.auditBtn;
+  document.getElementById('auditNoteEl').textContent = t.auditNote;
+  document.getElementById('timingNote').textContent = t.timingNote;
   document.getElementById('formHeading').textContent = t.form.heading;
   document.getElementById('formSub').textContent = t.form.sub;
   document.getElementById('fname').placeholder = t.form.namePlaceholder;
   document.getElementById('fphone').placeholder = t.form.phonePlaceholder;
   document.getElementById('submitBtn').textContent = t.form.submitBtn;
   document.querySelector('.privacy').textContent = t.form.privacy;
+
+  // Industry select placeholder
+  const industryPlaceholder = document.getElementById('industryPlaceholder');
+  if (industryPlaceholder) {
+    const placeholders = { ru: 'Сфера бизнеса', cs: 'Oblast podnikání', en: 'Industry' };
+    industryPlaceholder.textContent = placeholders[lang] || 'Industry';
+  }
 
   t.cards.forEach((card, i) => {
     const cardEl = document.getElementById('card_' + i);
@@ -609,6 +709,7 @@ function submitForm() {
   if (formSubmitted) return;
   const name = document.getElementById("fname").value.trim();
   const phone = document.getElementById("fphone").value.replace(/\D/g, "");
+  const industry = document.getElementById("findustry").value || "not_specified";
   const errEl = document.getElementById("ferror");
 
   if (name.length < 2) { errEl.innerText = t.form.nameError; return; }
@@ -629,7 +730,7 @@ function submitForm() {
       type: "quiz_completed",
       lang: lang,
       lead_id: "lead_" + Date.now(),
-      name, phone, score: sum, score_max: 16,
+      name, phone, industry, score: sum, score_max: 16,
       answers,
       categories: t.cards.map((c, i) => ({ category: c.title, score: answers[i] }))
     })
@@ -645,6 +746,7 @@ function showResult(sum, name) {
   const scoreEl = document.getElementById("scoreNum");
   const headEl  = document.getElementById("resultHeadline");
   const textEl  = document.getElementById("resultText");
+  const painsEl = document.getElementById("topPains");
 
   scoreEl.innerText = sum;
 
@@ -655,6 +757,26 @@ function showResult(sum, name) {
 
   headEl.innerText = name + tier.head;
   textEl.innerText = tier.text;
+
+  // Show top-2 pain points (categories with score >= 2, or highest if none)
+  if (sum > 5 && t.painLabels) {
+    const indexed = answers.map((s, i) => ({ i, s })).sort((a, b) => b.s - a.s);
+    const top = indexed.slice(0, 2).filter(x => x.s > 0);
+
+    if (top.length > 0) {
+      painsEl.style.display = 'block';
+      let html = '<div class="top-pains-title">' + t.topPainsTitle + '</div>';
+      top.forEach(x => {
+        const dotClass = x.s === 2 ? 'pain-dot red' : 'pain-dot';
+        html += '<div class="top-pains-item"><div class="' + dotClass + '"></div><span>' + t.painLabels[x.i] + '</span></div>';
+      });
+      painsEl.innerHTML = html;
+    } else {
+      painsEl.style.display = 'none';
+    }
+  } else {
+    painsEl.style.display = 'none';
+  }
 
   const res = document.getElementById("result");
   res.style.display = "block";
