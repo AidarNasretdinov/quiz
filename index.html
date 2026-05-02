@@ -685,6 +685,15 @@ function detectLang() {
 const lang = detectLang();
 const t = translations[lang];
 
+// Fix: set html lang attribute to match detected language (SEO + a11y)
+document.documentElement.lang = lang;
+
+/* ── CONSTANTS ── */
+const TOTAL_QUESTIONS = 8;
+const SCORE_MAX = 16;
+const TIER_LOW = 5;
+const TIER_MID = 11;
+
 /* ── APPLY TRANSLATIONS ── */
 function applyTranslations() {
   document.querySelector('h1').innerHTML = t.title + ' <span>' + t.titleSpan + '</span>';
@@ -724,10 +733,15 @@ function applyTranslations() {
 applyTranslations();
 
 /* ── QUIZ LOGIC ── */
-let answers = new Array(8).fill(null);
+let answers = new Array(TOTAL_QUESTIONS).fill(null);
 let quizDone = false;
 let quizStarted = false;
 let formSubmitted = false;
+
+// Fix: deduplicated helper — no more repeated answers.filter() calls
+function getAnsweredCount() {
+  return answers.filter(a => a !== null).length;
+}
 
 function set(i, val, el) {
   answers[i] = val;
@@ -740,23 +754,22 @@ function set(i, val, el) {
 
   if (!quizStarted) {
     quizStarted = true;
-    for (let j = 0; j < 8; j++) {
+    for (let j = 0; j < TOTAL_QUESTIONS; j++) {
       if (answers[j] === null) document.getElementById("card_" + j).classList.add("unanswered");
     }
   }
 
   updateProgress();
-  const done = answers.filter(a => a !== null).length;
-  if (done === 8 && !quizDone) {
+  if (getAnsweredCount() === TOTAL_QUESTIONS && !quizDone) {
     quizDone = true;
     setTimeout(showForm, 400);
   }
 }
 
 function updateProgress() {
-  const done = answers.filter(a => a !== null).length;
-  document.getElementById("progressFill").style.width = (done / 8 * 100) + "%";
-  document.getElementById("progressLabel").innerText = done + " / 8";
+  const done = getAnsweredCount();
+  document.getElementById("progressFill").style.width = (done / TOTAL_QUESTIONS * 100) + "%";
+  document.getElementById("progressLabel").innerText = done + " / " + TOTAL_QUESTIONS;
 }
 
 function showForm() {
@@ -769,7 +782,7 @@ function submitForm() {
   if (formSubmitted) return;
   const name = document.getElementById("fname").value.trim();
   const phone = document.getElementById("fphone").value.replace(/\D/g, "");
-  const industry = document.getElementById("findustry").value || "not_specified";
+  const industry = document.getElementById("findustry").value; // Fix: empty string = falsy, validates correctly
   const errEl = document.getElementById("ferror");
 
   // Clear previous error highlights
@@ -815,15 +828,15 @@ function showResult(sum, name) {
   scoreEl.innerText = sum;
 
   let tier;
-  if (sum <= 5) { tier = t.result.low; scoreEl.className = "result-score score-ok"; }
-  else if (sum <= 11) { tier = t.result.mid; scoreEl.className = "result-score score-mid"; }
+  if (sum <= TIER_LOW) { tier = t.result.low; scoreEl.className = "result-score score-ok"; }
+  else if (sum <= TIER_MID) { tier = t.result.mid; scoreEl.className = "result-score score-mid"; }
   else { tier = t.result.high; scoreEl.className = "result-score score-bad"; }
 
   headEl.innerText = name + tier.head;
   textEl.innerText = tier.text;
 
   // Show top-2 pain points (categories with score >= 2, or highest if none)
-  if (sum > 5 && t.painLabels) {
+  if (sum > TIER_LOW && t.painLabels) {
     const indexed = answers.map((s, i) => ({ i, s })).sort((a, b) => b.s - a.s);
     const top = indexed.slice(0, 2).filter(x => x.s > 0);
 
