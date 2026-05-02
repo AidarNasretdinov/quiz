@@ -118,6 +118,22 @@ h1 span { color: #4c6fff; }
 }
 .audit-btn:hover { background: #3a56e0; }
 .audit-note { font-size: 12px; color: #aaa; margin-top: 10px; }
+
+/* TWO CTA BUTTONS */
+.call-btn {
+  display: block; width: 100%; padding: 16px; border-radius: 14px;
+  background: #4c6fff; color: white; border: none; font-size: 16px;
+  font-weight: 700; cursor: pointer; text-decoration: none;
+  transition: background 0.2s; margin-bottom: 10px; text-align: center;
+}
+.call-btn:hover { background: #3a56e0; }
+.tg-btn {
+  display: block; width: 100%; padding: 14px; border-radius: 14px;
+  background: white; color: #4c6fff; border: 2px solid #4c6fff; font-size: 15px;
+  font-weight: 600; cursor: pointer; text-decoration: none;
+  transition: all 0.2s; text-align: center;
+}
+.tg-btn:hover { background: #f0f3ff; }
 .score-ok  { color: #2da84e; }
 .score-mid { color: #e0a030; }
 .score-bad { color: #e03a3a; }
@@ -319,12 +335,12 @@ h1 span { color: #4c6fff; }
     <input id="fphone" placeholder="+420 123 456 789" type="tel" autocomplete="tel" required>
     <select id="findustry">
       <option value="" disabled selected id="industryPlaceholder">Сфера бизнеса</option>
-      <option value="horeca">🍽️ HoReCa (кафе, ресторан, отель)</option>
-      <option value="construction">🏗️ Строительство / Недвижимость</option>
-      <option value="retail">🛒 Ритейл / E-commerce</option>
-      <option value="services">💼 Услуги / Консалтинг</option>
-      <option value="hr">👔 HR / Рекрутинг</option>
-      <option value="other">📦 Другое</option>
+      <option value="horeca" id="ind_horeca">🍽️ HoReCa (кафе, ресторан, отель)</option>
+      <option value="construction" id="ind_construction">🏗️ Строительство / Недвижимость</option>
+      <option value="retail" id="ind_retail">🛒 Ритейл / E-commerce</option>
+      <option value="services" id="ind_services">💼 Услуги / Консалтинг</option>
+      <option value="hr" id="ind_hr">👔 HR / Рекрутинг</option>
+      <option value="other" id="ind_other">📦 Другое</option>
     </select>
     <div class="error" id="ferror"></div>
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">Получить результат →</button>
@@ -337,8 +353,11 @@ h1 span { color: #4c6fff; }
     <div class="result-headline" id="resultHeadline"></div>
     <div class="result-text" id="resultText"></div>
     <div class="top-pains" id="topPains"></div>
-    <a class="audit-btn" href="https://t.me/aidar_nasretdinov" target="_blank" rel="noopener noreferrer" id="auditBtnEl">
-      Получить бесплатный аудит процессов
+    <a class="audit-btn call-btn" href="tel:+420776627409" id="callBtnEl">
+      📞 Позвонить — обсудить аудит
+    </a>
+    <a class="audit-btn tg-btn" href="https://t.me/aidar_nasretdinov" target="_blank" rel="noopener noreferrer" id="auditBtnEl">
+      ✈️ Написать в Telegram
     </a>
     <p class="audit-note" id="auditNoteEl">Напишите мне в Telegram — разберём ваш бизнес бесплатно</p>
     <p class="timing-note" id="timingNote">⏱ Обычно связываюсь в течение 2–3 часов в рабочее время</p>
@@ -426,7 +445,18 @@ const translations = {
     auditBtn: "Získat audit zdarma",
     auditNote: "Napište mi na Telegram — rozebereme vaše podnikání zdarma",
     timingNote: "⏱ Obvykle se ozvu do 2–3 hodin v pracovní době",
+    callBtn: "📞 Zavolat — probrat audit",
+    tgBtn: "✈️ Napsat na Telegram",
     topPainsTitle: "Vaše hlavní oblasti ztrát:",
+    industryPlaceholder: "Oblast podnikání",
+    industries: {
+      horeca: "🍽️ HoReCa (kavárna, restaurace, hotel)",
+      construction: "🏗️ Stavebnictví / Nemovitosti",
+      retail: "🛒 Maloobchod / E-commerce",
+      services: "💼 Služby / Poradenství",
+      hr: "👔 HR / Nábor",
+      other: "📦 Jiné"
+    },
     painLabels: [
       "Procesy závisí na lidech — jedna nemoc vytváří chaos",
       "Klienti odcházejí kvůli chybám a zapomnětlivosti",
@@ -514,7 +544,18 @@ const translations = {
     auditBtn: "Get a free process audit",
     auditNote: "Message me on Telegram — we'll analyze your business for free",
     timingNote: "⏱ I usually respond within 2–3 hours during business hours",
+    callBtn: "📞 Call — discuss the audit",
+    tgBtn: "✈️ Message on Telegram",
     topPainsTitle: "Your main loss areas:",
+    industryPlaceholder: "Industry",
+    industries: {
+      horeca: "🍽️ HoReCa (café, restaurant, hotel)",
+      construction: "🏗️ Construction / Real Estate",
+      retail: "🛒 Retail / E-commerce",
+      services: "💼 Services / Consulting",
+      hr: "👔 HR / Recruiting",
+      other: "📦 Other"
+    },
     painLabels: [
       "Processes depend on people — one sick day creates chaos",
       "Clients leave due to mistakes and forgetfulness",
@@ -602,7 +643,18 @@ const translations = {
     auditBtn: "Получить бесплатный аудит процессов",
     auditNote: "Напишите мне в Telegram — разберём ваш бизнес бесплатно",
     timingNote: "⏱ Обычно связываюсь в течение 2–3 часов в рабочее время",
+    callBtn: "📞 Позвонить — обсудить аудит",
+    tgBtn: "✈️ Написать в Telegram",
     topPainsTitle: "Ваши главные точки потерь:",
+    industryPlaceholder: "Сфера бизнеса",
+    industries: {
+      horeca: "🍽️ HoReCa (кафе, ресторан, отель)",
+      construction: "🏗️ Строительство / Недвижимость",
+      retail: "🛒 Ритейл / E-commerce",
+      services: "💼 Услуги / Консалтинг",
+      hr: "👔 HR / Рекрутинг",
+      other: "📦 Другое"
+    },
     painLabels: [
       "Процессы зависят от людей — один больничный создаёт хаос",
       "Клиенты уходят из-за ошибок и забывчивости",
@@ -633,7 +685,8 @@ function applyTranslations() {
   document.querySelector('h1').innerHTML = t.title + ' <span>' + t.titleSpan + '</span>';
   document.querySelector('.subtitle').textContent = t.subtitle;
   document.getElementById('resultLabel').textContent = t.result.label;
-  document.getElementById('auditBtnEl').textContent = t.auditBtn;
+  document.getElementById('auditBtnEl').textContent = t.tgBtn || t.auditBtn;
+  document.getElementById('callBtnEl').textContent = t.callBtn;
   document.getElementById('auditNoteEl').textContent = t.auditNote;
   document.getElementById('timingNote').textContent = t.timingNote;
   document.getElementById('formHeading').textContent = t.form.heading;
@@ -643,11 +696,13 @@ function applyTranslations() {
   document.getElementById('submitBtn').textContent = t.form.submitBtn;
   document.querySelector('.privacy').textContent = t.form.privacy;
 
-  // Industry select placeholder
-  const industryPlaceholder = document.getElementById('industryPlaceholder');
-  if (industryPlaceholder) {
-    const placeholders = { ru: 'Сфера бизнеса', cs: 'Oblast podnikání', en: 'Industry' };
-    industryPlaceholder.textContent = placeholders[lang] || 'Industry';
+  // Translate industry select
+  if (t.industries) {
+    document.getElementById('industryPlaceholder').textContent = t.industryPlaceholder;
+    Object.keys(t.industries).forEach(key => {
+      const el = document.getElementById('ind_' + key);
+      if (el) el.textContent = t.industries[key];
+    });
   }
 
   t.cards.forEach((card, i) => {
