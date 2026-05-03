@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Чек-лист: где бизнес теряет время и деньги</title>
+<title id="page-title">Checklist: kde vaše firma ztrácí čas a peníze</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -373,6 +373,7 @@ const WEBHOOK = "https://hook.eu1.make.com/qt6ddmq795lcq2wcpvggji5740vvfcv5";
 /* ── TRANSLATIONS ── */
 const translations = {
   cs: {
+    page_title: "Checklist: kde vaše firma ztrácí čas a peníze",
     title: "Checklist:",
     titleSpan: "kde vaše firma ztrácí čas a peníze",
     subtitle: "Odpovězte upřímně — ne / občas / to jsme my",
@@ -473,6 +474,7 @@ const translations = {
   },
 
   en: {
+    page_title: "Checklist: where your business loses time and money",
     title: "Checklist:",
     titleSpan: "where your business loses time and money",
     subtitle: "Answer honestly — no / sometimes / that's us",
@@ -573,6 +575,7 @@ const translations = {
   },
 
   ru: {
+    page_title: "Чек-лист: где бизнес теряет время и деньги",
     title: "Чек-лист:",
     titleSpan: "где бизнес теряет время и деньги",
     subtitle: "Ответьте честно — нет / иногда / это мы",
@@ -696,6 +699,7 @@ const TIER_MID = 11;
 
 /* ── APPLY TRANSLATIONS ── */
 function applyTranslations() {
+  if (t.page_title) document.getElementById('page-title').textContent = t.page_title;
   document.querySelector('h1').innerHTML = t.title + ' <span>' + t.titleSpan + '</span>';
   document.querySelector('.subtitle').textContent = t.subtitle;
   document.getElementById('resultLabel').textContent = t.result.label;
